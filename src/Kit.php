@@ -57,7 +57,8 @@ class Kit
         if ($cityData === [0]) {
             return false;
         }
-        $data = explode(':', $cityData[0]);
+
+        $data = explode(':', $cityData['data'][0]);
         $vals = ['COUNTRY', 'REGION', 'TZONEID', 'ID', 'SR'];
         $cityData = [];
         foreach ($data as $key => $value) {
