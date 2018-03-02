@@ -1,19 +1,38 @@
 {
-    "name": "alfamart24/laravel-tk-kit",
-    "description": "TK KIT API",
-    "keywords": ["api", "kit", "laravel"],
-     "require": {
-        "php": ">=5.6.4",
-        "illuminate/support": "~5.1"
+  "name": "alfamart24/laravel-tk-kit",
+  "description": "TK KIT API",
+  "keywords": [
+    "api",
+    "kit",
+    "laravel"
+  ],
+  "require": {
+    "php": ">=7.0",
+    "laravel/framework": ">=5.5.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "alfamart24\\laravel_tk_kit\\": "src"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alexey Butochnikov",
+      "email": "butochnikov@gmail.com"
     },
-     "authors": [
-        {
-            "name": "Alexey Butochnikov",
-            "email": "butochnikov@gmail.com"
-        }
-    ],
-    "type": "laravel-package",
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "require": {}
+    {
+      "name": "Aleksandr Gamov",
+      "email": "slowdream@yandex.ru"
+    }
+  ],
+  "type": "laravel-package",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "slowdream\\kit_laravel\\KitServiceProvider"
+      ]
+    }
+  }
 }
