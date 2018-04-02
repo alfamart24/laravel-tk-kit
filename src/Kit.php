@@ -7,6 +7,7 @@ class Kit
 {
     private $token;
     private $apiUrl = 'https://tk-kit.ru/API.1.1';
+    private $cv;
 
     /**
      * Kit constructor.
@@ -14,6 +15,25 @@ class Kit
     public function __construct()
     {
         $this->token = config('kit.token');
+
+
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 15);
+
+        $this->cv = $curl;
+    }
+
+    /**
+     * Kit destructor.
+     */
+    function __destruct()
+    {
+        curl_close($this->cv);
     }
 
     /**
@@ -25,28 +45,22 @@ class Kit
     private function sendRequest(string $func, $data = [])
     {
         $url = $this->apiUrl . '?token=' . $this->token . '&f=' . $func;
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_POST, count($data));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 15);
+        curl_setopt($this->cv, CURLOPT_URL, $url);
+        curl_setopt($this->cv, CURLOPT_POST, count($data));
+        curl_setopt($this->cv, CURLOPT_POSTFIELDS, http_build_query($data));
 
         for ($i = 0; $i < 5; $i++) {
-            $response = curl_exec($curl);
-            $headerCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $response = curl_exec($this->cv);
+            $headerCode = curl_getinfo($this->cv, CURLINFO_HTTP_CODE);
 
             // Сервис периодически отправляет битый запрос, если этого не произошло то продолжаем, иначе повторить.
             if ($headerCode != 502)
                 break;
         }
 
-        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $header_size = curl_getinfo($this->cv, CURLINFO_HEADER_SIZE);
         $responseBody = substr($response, $header_size);
-        curl_close($curl);
+
 
         return [
           'http_code' => $headerCode,
